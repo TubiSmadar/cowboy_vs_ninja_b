@@ -19,15 +19,17 @@ namespace ariel
         vector<Character *> warriors;
         Character *leaderP;
         bool isMember(Character *character);
+        int teamSize;
 
     public:
         Team(Character *leaderP);
+        ~Team();
         void add(Character *warrior);
         void attack(Team *enemy_team);
         int stillAlive();
         void print();
         virtual Character *getByOrder();
-
+        vector<Character *> getWarriors();
         void remove(Character *warrior);
         Character *getLeaderP();
         size_t size();
