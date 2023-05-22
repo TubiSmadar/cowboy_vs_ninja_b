@@ -1,35 +1,21 @@
-#ifndef CHARACTER_HPP
-#define CHARACTER_HPP
+#ifndef COWBOY_HPP
+#define COWBOY_HPP
+#include "Character.hpp"
 
-#include <iostream>
-#include "Point.hpp"
+
 
 using namespace std;
-
-namespace ariel
-{
-    class Character
-    {
+namespace ariel{
+    class Cowboy : public Character{
     private:
-        Point point;
-        int hitpoints;
-        string name;
+    int bullets;
 
     public:
-        Character(string name, Point point);
-        Character(string name, Point point, int hitpoints);
-        bool isAlive();
-        double distance(Character *other);
-        void hit(int damage);
-        string getName();
-        Point getLocation();
-        virtual string print();
-
-        int getHitpoints();
-        void moveTowards(Point point, double distance);
-
-        
-    };
+    Cowboy(std::string name, Point point);
+    void shoot(Character* enemy);
+    bool hasboolets();
+    void reload();
+};
 }
 
-#endif // CHARACTER_HPP
+#endif
