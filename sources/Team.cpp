@@ -44,10 +44,95 @@ namespace ariel
     }
     void Team::attack(Team *enemy_team)
     {
- 
-}
+        if(enemy_team == nullptr)
+        {
+            throw std::invalid_argument("nullptr");
+        }
+        //first check leader life and choose other if needed
+        if(!this->leaderP->isAlive()){
+            this->leaderP = chooseLeader(this->leaderP);
+        }
+        //team choose target
+
+        Character* target;
+
+        target = chooseTarget(enemy_team);
+        label1:
+        if (target->isAlive() && target != nullptr){
+            for (Character* character : this->warriors)
+            {
+                    if(this->stillAlive() <= 0 || enemy_team->stillAlive() <=0)
+                    {
+                        break;
+                    }
+                    if (character->isAlive())
+                    {
+                        if (Cowboy *temp = dynamic_cast<Cowboy *>(character)){
+                            if (temp->hasboolets())
+                                temp->shoot(target);
+                                if (isLeader(temp))
+                                {
+                                    target = chooseLeader(enemy_team->leaderP);
+                                }
+                            else
+                                temp->reload();
+                        }
+
+                        if (Ninja *temp = dynamic_cast<Ninja *>(character)){
+                            if(temp->getLocation().distance(target->getLocation()) < 1)
+                                temp->slash(target);
+                                if (isLeader(temp))
+                                {
+                                    target = chooseLeader(enemy_team->leaderP);
+                                }
+                            else
+                                temp->move(target);
+                        }
+                    }
+                    else {
+                        goto label1;
+                    }      
+            }
+        }
+
+
+    }
+    bool Team::isLeader(Character* warrior){
+        if (warrior == leaderP)
+        {return true;}
+        return false;
+    }
+
+
+    Character* Team::chooseLeader(Character* leaderP){
+        double temp_dist = std::numeric_limits<double>::max();
+        Character* temp;
+        for (Character* character : this->warriors){
+            if (leaderP->distance(character) < temp_dist && character->isAlive())
+            {
+                temp = character;
+            }
+        }
+        return temp;
+    }
+    Character* Team::chooseTarget(Team *enemy_team){
+        if (enemy_team->stillAlive() <= 0)
+        {
+            return NULL;
+        }
+        double temp_dist = std::numeric_limits<double>::max();
+        Character* temp;
+        for (Character* character : enemy_team->getWarriors()){
+            if (this->leaderP->distance(character) < temp_dist && character->isAlive())
+            {
+                temp = character;
+            }
+        }
+        return temp;
+    }
 
     
+
     int Team::stillAlive()
     {
         return this->teamSize;
