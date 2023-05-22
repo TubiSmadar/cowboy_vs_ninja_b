@@ -6,7 +6,7 @@ using namespace std;
 
     
     Ninja::Ninja(std::string name, Point point, int hitpoints, int speed) : Character(name,point, hitpoints){
-
+        this->speed = speed;
     }
     Ninja::Ninja(std::string name, Point point) : Character(name,point){
 
