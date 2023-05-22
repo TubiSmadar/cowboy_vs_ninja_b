@@ -1,5 +1,8 @@
 #ifndef POINT_HPP
 #define POINT_HPP
+#include <cmath>
+#include <iostream>
+
 namespace ariel {
     class Point {
         private:
@@ -8,10 +11,11 @@ namespace ariel {
 
         public:
         Point(double xCoordinate, double yCoordinate);
-
+        double getX();
+        double getY();
         double distance (Point one);
-        void print(Point one);
-        Point moveTowards(Point one, Point two, double distance);
+        std::string print(Point one);
+        static Point moveTowards(Point one, Point two, double distance);
     };
 }
 
