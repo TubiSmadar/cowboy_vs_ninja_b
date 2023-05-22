@@ -32,6 +32,10 @@ namespace ariel
         vector<Character *> getWarriors();
         void remove(Character *warrior);
         Character *getLeaderP();
+        Character* chooseLeader(Character* leaderP);
+        Character* chooseTarget(Team* enemy_team);
+        bool isLeader(Character* warrior);
+
         size_t size();
     };
 }
