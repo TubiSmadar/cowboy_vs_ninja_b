@@ -19,7 +19,7 @@ namespace ariel {
             throw std::runtime_error("Cowboy is dead!");
         }
         if (!(enemy->isAlive())){
-            throw std::runtime_error("Enemy is dead!\nDon't waste ammo!");
+            throw std::runtime_error("Enemy is dead!");
         }
         if (this->hasboolets() && this->isAlive())
         {
