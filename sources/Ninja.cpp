@@ -12,10 +12,12 @@ using namespace std;
 
     }
 
-    void Ninja::move(Character* enemy){
-        Point dest = this->getLocation().moveTowards(this->getLocation(), enemy->getLocation(),this->speed);
-        this->setLocation(dest);
-    }
+    void Ninja::move(Character* enemy)
+        {
+            Point dest = this->getLocation().moveTowards(this->getLocation(), enemy->getLocation(), this->speed);
+            this->setLocation(dest);
+        }
+
 
     void Ninja::slash(Character* enemy){
         if (enemy == this)
@@ -32,6 +34,14 @@ using namespace std;
         {
             enemy->hit(40);
         }
+    }
+    void Ninja::atk(Character* enemy){
+        if (!this->isAlive() || !enemy->isAlive())
+            return;
+        if (distance(enemy) <= 1)
+            slash(enemy);
+        else
+            move(enemy);
     }
     
 };
