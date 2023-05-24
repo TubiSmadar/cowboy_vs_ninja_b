@@ -23,17 +23,28 @@ namespace ariel
 
     public:
         Team(Character *leaderP);
-        ~Team();
-        void add(Character *warrior);
-        void attack(Team *enemy_team);
-        int stillAlive();
+        virtual ~Team();
+        Team(const Team&) = default;
+        Team& operator=(const Team&) = default;
+        Team(Team&&) = default;
+        Team& operator=(Team&&) = default;        
+        virtual void add(Character *warrior);
+        virtual void attack(Team *enemy_team);
+        virtual int stillAlive();
         void print();
-        virtual Character *getByOrder();
-        vector<Character *> getWarriors();
+        vector<Character *> getWarriors()
+        {
+            return warriors;
+        }
+        void setWarriors(Character * fighter_to_add)
+        {
+            warriors.push_back(fighter_to_add);
+        }
         void remove(Character *warrior);
         Character *getLeaderP();
+        void setLeaderP(Character* leaderP){this->leaderP = leaderP;}
         Character* chooseLeader(Character* leaderP);
-        Character* chooseTarget(Team* enemy_team);
+        virtual Character* chooseTarget(Team* enemy_team);
         bool isLeader(Character* warrior);
 
         size_t size();
