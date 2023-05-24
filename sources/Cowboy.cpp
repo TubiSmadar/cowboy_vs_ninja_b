@@ -24,7 +24,8 @@ namespace ariel {
         if (this->hasboolets() && this->isAlive())
         {
             this->bullets = this->bullets - 1;
-            enemy->setHitpoints(enemy->getHitpoints() - 10);
+            int newHitpoints = enemy->getHitpoints() - 10;
+            enemy->setHitpoints(std::max(newHitpoints, 0));
         }
     }
 
@@ -39,5 +40,12 @@ namespace ariel {
         }
         this->bullets = 6;
     }
-    
+    void Cowboy::atk(Character* enemy){
+        if (!this->isAlive() || !enemy->isAlive())
+            return;
+        if (hasboolets())
+            shoot(enemy);
+        else
+            reload();
+    }
 }
