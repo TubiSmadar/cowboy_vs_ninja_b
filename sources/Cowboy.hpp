@@ -11,10 +11,16 @@ namespace ariel{
     int bullets;
 
     public:
+    ~Cowboy() override = default;
+    Cowboy(const Cowboy&) = default;
+    Cowboy& operator=(const Cowboy&) = default;
+    Cowboy(Cowboy&&) = default;
+    Cowboy& operator=(Cowboy&&) = default;
     Cowboy(std::string name, Point point);
     void shoot(Character* enemy);
     bool hasboolets();
     void reload();
+    void atk(Character* enemy);
 };
 }
 
