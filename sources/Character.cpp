@@ -18,6 +18,7 @@ namespace ariel
     {
         return this->hitpoints > 0;
     }
+    
     void Character::hit(int damage)
     {
         if (damage < 0)
@@ -49,7 +50,7 @@ namespace ariel
         std::string info = "Name: " + name + "\n";
         info += "Hitpoints: " + std::to_string(hitpoints) + "\n";
         info += "Point: ";
-        point.print(this->point);
+        info += point.print(this->point);
         info += "\n";
         return info;
     }
