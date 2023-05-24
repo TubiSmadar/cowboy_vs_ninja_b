@@ -38,104 +38,140 @@ namespace ariel
         if (fighter_to_add->getInTeam()){
             throw std::runtime_error("Character in team already!");
         }
-        this->warriors.push_back(fighter_to_add);
-        fighter_to_add->setInTeam(true);
-        teamSize++;
+        if (Ninja *temp = dynamic_cast<Ninja *>(fighter_to_add)){
+            this->warriors.push_back(fighter_to_add);
+            fighter_to_add->setInTeam(true);
+            teamSize++;
+        }
+        else{
+            this->warriors.insert(this->warriors.begin(), fighter_to_add);
+            fighter_to_add->setInTeam(true);
+            teamSize++;
+        }
     }
-    void Team::attack(Team *enemy_team)
-    {
-        if(enemy_team == nullptr)
-        {
-            throw std::invalid_argument("nullptr");
-        }
-        //first check leader life and choose other if needed
-        if(!this->leaderP->isAlive()){
-            this->leaderP = chooseLeader(this->leaderP);
-        }
-        //team choose target
-
-        Character* target;
-
-        target = chooseTarget(enemy_team);
-        label1:
-        if (target->isAlive() && target != nullptr){
-            for (Character* character : this->warriors)
-            {
-                    if(this->stillAlive() <= 0 || enemy_team->stillAlive() <=0)
-                    {
-                        break;
-                    }
-                    if (character->isAlive())
-                    {
-                        if (Cowboy *temp = dynamic_cast<Cowboy *>(character)){
-                            if (temp->hasboolets())
-                                temp->shoot(target);
-                                if (isLeader(temp))
-                                {
-                                    target = chooseLeader(enemy_team->leaderP);
-                                }
-                            else
-                                temp->reload();
-                        }
-
-                        if (Ninja *temp = dynamic_cast<Ninja *>(character)){
-                            if(temp->getLocation().distance(target->getLocation()) < 1)
-                                temp->slash(target);
-                                if (isLeader(temp))
-                                {
-                                    target = chooseLeader(enemy_team->leaderP);
-                                }
-                            else
-                                temp->move(target);
-                        }
-                    }
-                    else {
-                        goto label1;
-                    }      
-            }
-        }
-
-
-    }
+ 
     bool Team::isLeader(Character* warrior){
         if (warrior == leaderP)
         {return true;}
         return false;
     }
 
+    void Team::attack(Team* other) {
+        if (other == nullptr)
+        {
+            throw std::invalid_argument("nullptr");
+        }
+        if (!this->leaderP->isAlive())
+        {
+            this->leaderP = chooseLeader(this->leaderP);
+        }
 
+        if (other->stillAlive() <= 0 || this->stillAlive()<=0)
+        {
+            throw std::runtime_error("cant attack dead team!");
+            return;
+        }
+
+        choose_target:// For goto
+        Character* target = chooseTarget(other);
+        if (target == nullptr){
+            return;
+        }
+        
+        if (other->stillAlive() <= 0 || this->stillAlive()<=0)
+        {
+            return;
+        }
+        for (Character* warrior : this->warriors)
+        {
+            if (other->stillAlive() <= 0 || this->stillAlive()<=0)
+                {
+                    return;
+                }
+            if (warrior->isAlive() && warrior != nullptr){
+                if (dynamic_cast<Cowboy*>(warrior) != nullptr)
+                {
+                    Cowboy* temp = (Cowboy*)(warrior);
+                    temp->atk(target);
+                    // std::cout<<target->getHitpoints()<<std::endl;
+                    if (!target->isAlive())
+                    {
+                        target = chooseTarget(other);
+                    }
+                }
+
+                if (dynamic_cast<Ninja*>(warrior) != nullptr)
+                {
+                    Ninja* temp = (Ninja*)(warrior);
+                    temp->atk(target);
+                    // std::cout<<target->getHitpoints()<<std::endl;
+                    if (!target->isAlive())
+                    {
+                        target = chooseTarget(other);
+                    }
+                }
+
+            }
+        }
+
+    }
     Character* Team::chooseLeader(Character* leaderP){
+        if (leaderP->isAlive())
+        {return leaderP;}
+        if (leaderP == nullptr)
+        {
+            throw std::invalid_argument("nullptr");
+        }
         double temp_dist = std::numeric_limits<double>::max();
         Character* temp;
         for (Character* character : this->warriors){
             if (leaderP->distance(character) < temp_dist && character->isAlive())
             {
+                temp_dist = leaderP->distance(character);
                 temp = character;
             }
         }
+
         return temp;
     }
-    Character* Team::chooseTarget(Team *enemy_team){
+
+    Character* Team::chooseTarget(Team* enemy_team)
+    {
+        if (enemy_team == nullptr)
+        {
+            throw std::invalid_argument("nullptr");
+        }
         if (enemy_team->stillAlive() <= 0)
         {
-            return NULL;
+            return nullptr;
         }
         double temp_dist = std::numeric_limits<double>::max();
-        Character* temp;
-        for (Character* character : enemy_team->getWarriors()){
+        Character* temp = nullptr; // Initialize temp to nullptr
+        for (Character* character : enemy_team->getWarriors())
+        {
             if (this->leaderP->distance(character) < temp_dist && character->isAlive())
             {
-                temp = character;
+                temp_dist = this->leaderP->distance(character); // Update temp_dist with the new minimum distance
+                temp = character; // Assign the selected character to temp
             }
         }
         return temp;
     }
+
 
     
 
     int Team::stillAlive()
     {
-        return this->teamSize;
+        int count = 0;
+        for (Character* warrior : this->warriors)
+        {
+            if (warrior->isAlive())
+            {
+                count++;
+            }
+        }
+        return count;
     }
     void Team::print()
     {
@@ -148,11 +184,6 @@ namespace ariel
                 std::cout << "n: " << temp->print() << "\n";
 
         }
-    }
-
-    Character *Team::getByOrder()
-    {
-        return NULL;
     }
 
     void Team::remove(Character* fighter_to_remove)
@@ -174,10 +205,7 @@ namespace ariel
     {
         return warriors.size();
     }
-            
-    vector<Character *> Team::getWarriors(){
-        return this->warriors;
-    }
+
 
 
 
