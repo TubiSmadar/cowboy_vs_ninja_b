@@ -12,11 +12,16 @@ namespace ariel
     class Team2 : public Team
     {
     private:
-
+        int still_alive;
 
     public:
-        Team2(Character* t2LeaderP);
-        Character* getByOrder() override;
+        ~Team2() override = default;
+        Team2(const Team2&) = default;
+        Team2& operator=(const Team2&) = default;
+        Team2(Team2&&) = default;
+        Team2& operator=(Team2&&) = default;        Team2(Character* t2LeaderP);
+        void add(Character* warrior) override;
+        int stillAlive() override;
 
     };
 }
