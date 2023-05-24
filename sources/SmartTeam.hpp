@@ -15,8 +15,16 @@ namespace ariel
 
 
     public:
+        ~SmartTeam() override = default;
+        SmartTeam(const SmartTeam&) = default;
+        SmartTeam& operator=(const SmartTeam&) = default;
+        SmartTeam(SmartTeam&&) = default;
+        SmartTeam& operator=(SmartTeam&&) = default;        
         SmartTeam(Character* t2LeaderP);
-        Character* getByOrder() override;
+
+        // void add(Character* fighter_to_add) override;
+        void attack(Team* enemy_team) override;
+        Character* chooseTarget(Team* other) override;
 
     };
 }
