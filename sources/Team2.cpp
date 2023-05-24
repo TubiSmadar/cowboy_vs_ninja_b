@@ -10,10 +10,30 @@ namespace ariel
         
     }
 
+    int Team2::stillAlive() {
+        int count = 0;
+        for (Character* warrior : this->getWarriors())
+        {
+            if (warrior->isAlive())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
 
-    Character* Team2::getByOrder()
-    {
-        return NULL;
+    void Team2::add(Character* fighter_to_add) {
+        if (fighter_to_add != nullptr && fighter_to_add->isAlive() && !fighter_to_add->getInTeam() && getWarriors().size() < 10)
+        {
+            this->setWarriors(fighter_to_add);
+            fighter_to_add->setInTeam(true);
+        }
+        else
+        {
+            throw runtime_error("Can't add this Character!");
+        }
     }
 
 }
+
+
