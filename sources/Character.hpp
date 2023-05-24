@@ -16,6 +16,11 @@ namespace ariel
         std::string name;
         bool inTeam;
     public:
+        virtual ~Character() = default;
+        Character(const Character&) = default;
+        Character& operator=(const Character&) = default;
+        Character(Character&&) = default;
+        Character& operator=(Character&&) = default;
         Character(string name, Point point);
         Character(string name, Point point, int hitpoints);
         bool isAlive();
